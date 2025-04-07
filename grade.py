@@ -89,15 +89,16 @@ toolbox.register("individual", tools.initIterate, creator.Individual, toolbox.ex
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 toolbox.register("compile", gp.compile, pset=pset)
 
-def make_tuple(lower_bound, upper_bound):
-    return (random.randint(88, 92),
-            random.randint(82, 78),
-            random.randint(72, 68),
-            random.randint(62, 58),
-            random.randint(lower_bound, upper_bound))
+def make_tuple():
+    A = random.randint(4, 101)
+    B = random.randint(3, A)
+    C = random.randint(2, B)
+    D = random.randint(1, C)
+    G = random.randint(0, 100)
+    return (A, B, C, D, G)
 
 def make_inputs(num_inputs, lower_bound, upper_bound):
-    return list(make_tuple(lower_bound, upper_bound) for i in range(0, num_inputs))
+    return list(make_tuple() for i in range(0, num_inputs))
 
 # Make 100 random input triples where each value v is 0≤v<100.
 inputs = make_inputs(100, 0, 100)
