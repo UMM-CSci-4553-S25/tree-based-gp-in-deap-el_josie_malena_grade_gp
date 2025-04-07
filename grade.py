@@ -90,10 +90,10 @@ toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 toolbox.register("compile", gp.compile, pset=pset)
 
 def make_tuple(lower_bound, upper_bound):
-    return (random.randint(lower_bound, upper_bound),
-            random.randint(lower_bound, upper_bound),
-            random.randint(lower_bound, upper_bound),
-            random.randint(lower_bound, upper_bound),
+    return (random.randint(88, 92),
+            random.randint(82, 78),
+            random.randint(72, 68),
+            random.randint(62, 58),
             random.randint(lower_bound, upper_bound))
 
 def make_inputs(num_inputs, lower_bound, upper_bound):
@@ -102,10 +102,10 @@ def make_inputs(num_inputs, lower_bound, upper_bound):
 # Make 100 random input triples where each value v is 0≤v<100.
 inputs = make_inputs(100, 0, 100)
 
-def median(a, b, c, d, e):
-    values = [a, b, c, d, e]
-    values.sort()
-    return values[2]
+def grade(a, b, c, d, g):
+    values = [a, b, c, d, g]
+    #values.sort()
+    return values[4]
 
 def evalSymbReg(individual, points):
     # Transform the tree expression in a callable function
