@@ -94,7 +94,7 @@ def make_tuple():
     B = random.randint(3, A)
     C = random.randint(2, B)
     D = random.randint(1, C)
-    G = random.randint(0, 100)
+    G = random.randint(0, 101)
     return (A, B, C, D, G)
 
 def make_inputs(num_inputs, lower_bound, upper_bound):
