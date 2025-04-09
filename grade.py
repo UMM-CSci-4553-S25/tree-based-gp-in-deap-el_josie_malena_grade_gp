@@ -65,16 +65,17 @@ pset.addPrimitive(max, 2)
 pset.addPrimitive(operator.add, 2)
 pset.addPrimitive(operator.sub, 2)
 pset.addPrimitive(operator.mul, 2)
-#pset.addPrimitive(protectedDiv, 2)
+pset.addPrimitive(protectedDiv, 2)
 pset.addPrimitive(operator.neg, 1)
+#pset.addPrimitive(if_then_else, 3)
 
 pset.addEphemeralConstant("rand101", partial(random.randint, -1, 1))
 
-pset.renameArguments(ARG0='a')
-pset.renameArguments(ARG1='b')
-pset.renameArguments(ARG2='c')
-pset.renameArguments(ARG3='d')
-pset.renameArguments(ARG4='g')
+pset.renameArguments(ARG0='A')
+pset.renameArguments(ARG1='B')
+pset.renameArguments(ARG2='C')
+pset.renameArguments(ARG3='D')
+pset.renameArguments(ARG4='G')
 
 creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
 creator.create("Individual", gp.PrimitiveTree, fitness=creator.FitnessMin)
@@ -89,12 +90,13 @@ toolbox.register("individual", tools.initIterate, creator.Individual, toolbox.ex
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 toolbox.register("compile", gp.compile, pset=pset)
 
+# The the letter grades must be in descending order 
 def make_tuple():
-    A = random.randint(4, 101)
-    B = random.randint(3, A)
-    C = random.randint(2, B)
-    D = random.randint(1, C)
-    G = random.randint(0, 101)
+    A = random.randint(7, 100)
+    B = random.randint(5, A-1)
+    C = random.randint(3, B-1)
+    D = random.randint(1, C-1)
+    G = random.randint(0, 100)
     return (A, B, C, D, G)
 
 def make_inputs(num_inputs, lower_bound, upper_bound):
@@ -104,45 +106,52 @@ def make_inputs(num_inputs, lower_bound, upper_bound):
 inputs = make_inputs(100, 0, 100)
 
 def grade(a, b, c, d, g):
-    values = [a, b, c, d, g]
-    #values.sort()
-    return values[4]
+    if g < 0: return "Yikes!"
+    if g < d: return "F"
+    if g < c: return "D"
+    if g < b: return "C"
+    if g < a: return "B"
+    return "A"
 
-def evalSymbReg(individual, points):
-    # Transform the tree expression in a callable function
+# Map grades to numeric values for fitness calculation
+grade_map = {"A": 4, "B": 3, "C": 2, "D": 1, "F": 0}
+
+def evalGrade(individual, points):
+    # Compile the individual's tree into a callable function
     func = toolbox.compile(expr=individual)
-    # Evaluate the mean squared error between the expression
-    # and the real function : x^9 + 3x^6 + 3x^3 + 2
-    # `sqerrors` is the square of all the errors.
-    sqerrors = ((func(a, b, c, d, e) - median(a, b, c, d, e))**2 for (a, b, c, d, e) in points)
+    
+    # Initialize the total error
+    errors = 0
+    
+    # Iterate through all input points
+    for A, B, C, D, grade_value in points:
+        # Use the individual's function to predict the grade
+        predicted = grade(A,B,C,D,func(A, B, C, D, grade_value))
+        
+        # Get the actual grade using the target function
+        actual = grade(A, B, C, D, grade_value)
+        
+        # Calculate the error as the absolute difference between predicted and actual grades
+        # Grades are mapped to numeric values using grade_map
+        errors += abs(grade_map.get(predicted, 0) - grade_map[actual])
+    
+    # Return the average error as the fitness value (lower is better)
+    return errors / len(points),
 
-    # This computes the average of the squared errors, i.e., the mean squared error,
-    # i.e., the MSE.
-    return math.fsum(sqerrors) / len(points),
+# Register the evaluation function in the toolbox
+toolbox.register("evaluate", evalGrade, points=inputs)
 
-# The training cases are from -4 (inclusive) to +4 (exclusive) in increments of 0.25.
-toolbox.register("evaluate", evalSymbReg, points=inputs)
-
-# Tournament selection with tournament size 3
+# Register the selection operator (tournament selection with size 3)
 toolbox.register("select", tools.selTournament, tournsize=3)
 
-# One-point crossover, i.e., remove a randomly chosen subtree from the parent,
-# and replace it with a randomly chosen subtree from a second parent.
+# Register the crossover operator (one-point crossover)
 toolbox.register("mate", gp.cxOnePoint)
 
-# Remove a randomly chosen subtree and replace it with a "full" randomly generated
-# tree whose depth is between min and max. `expr_mut` is specifying a way of
-# generating new trees using `Full`. `mutUniform` below says that `mutate` will
-# _uniformly_ choose a subtree to remove and replace it using `expr_mut`, i.e.,
-# `Full`.
+# Register the mutation operator (generate a new subtree using the Full method)
 toolbox.register("expr_mut", gp.genFull, min_=0, max_=2)
 toolbox.register("mutate", gp.mutUniform, expr=toolbox.expr_mut, pset=pset)
 
-# Set the maximum height of a tree after either crossover or mutation to be 17.
-# When an invalid (over the limit) child is generated, it is simply replaced
-# by one of its parents, randomly selected. This replacement policy is a Real Bad Idea
-# because it rewards parents who are likely to create offspring that are above the
-# threshold.
+# Decorate the crossover and mutation operators to enforce a maximum tree height of 17
 toolbox.decorate("mate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17))
 toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17))
 
@@ -166,11 +175,22 @@ def main():
     pop, log = algorithms.eaSimple(pop, toolbox, 0.5, 0.1, 200, stats=mstats,
                                    halloffame=hof, verbose=True)
 
-    # print log
+    # Print the best individual
+    print("\nBest Individual:")
+    best_individual = hof[0]
+    print(str(best_individual))
 
-    # Print the members of the hall of fame
-    for winner in hof:
-        print(str(winner))
+    # Compile the best individual into a callable function
+    func = toolbox.compile(expr=best_individual)
+
+    # Print predictions vs actual grades
+    print("\nPredictions vs Actual Grades:")
+    for A, B, C, D, grade_value in inputs[:8]:  # Limit to 8 examples for readability
+        predicted = func(A, B, C, D, grade_value)
+        actual = grade(A, B, C, D, grade_value)
+        print(f"Inputs: (A={A}, B={B}, C={C}, D={D}, G={grade_value})")
+        print(f"Predicted Grade: {grade(A,B,C,D, predicted)}, Actual Grade: {actual}")
+        print("-" * 40)
 
     return pop, log, hof
 
