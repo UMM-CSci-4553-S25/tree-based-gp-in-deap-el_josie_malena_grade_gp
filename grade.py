@@ -113,7 +113,19 @@ def grade(a, b, c, d, g): # converts g to appropriate letter grade or "Z" if out
     if g > 100: return "Z" 
 
 def grading(knownResult, treeResult):
-    scale = {"A", "B", "C", "D", "F", "Z"}
+    scale = {
+        "A": 5,
+        "B": 4,
+        "C": 3,
+        "D": 2,
+        "F": 1,
+        }
+
+    if treeResult == "Z":
+        return 0
+    else:
+        return 5 - abs((scale[knownResult] - scale[treeResult]))
+    # return 0
     # return score of 5 if correct, 4 if one away, 3 if 2 away, 2 if 3 away, 1 if 4 away and 0 if "Z"
 
 def evalSymbReg(individual, points):
