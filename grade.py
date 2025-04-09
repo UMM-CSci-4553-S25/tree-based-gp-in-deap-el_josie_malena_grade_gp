@@ -103,18 +103,26 @@ def make_inputs(num_inputs, lower_bound, upper_bound):
 # Make 100 random input triples where each value v is 0≤v<100.
 inputs = make_inputs(100, 0, 100)
 
-def grade(a, b, c, d, g):
-    values = [a, b, c, d, g]
-    #values.sort()
-    return values[4]
+def grade(a, b, c, d, g): # converts g to appropriate letter grade or "Z" if out of bounds 
+    if g < 0: return "Z" # to have better handling of edge cases we could return the value of g
+    if g < d: return "F"
+    if g < c: return "D"
+    if g < b: return "C" 
+    if g < a: return "B"
+    if g <= 100: return "A"
+    if g > 100: return "Z" 
+
+def grading(knownResult, treeResult):
+    scale = {"A", "B", "C", "D", "F", "Z"}
+    # return score of 5 if correct, 4 if one away, 3 if 2 away, 2 if 3 away, 1 if 4 away and 0 if "Z"
 
 def evalSymbReg(individual, points):
     # Transform the tree expression in a callable function
     func = toolbox.compile(expr=individual)
     # Evaluate the mean squared error between the expression
-    # and the real function : x^9 + 3x^6 + 3x^3 + 2
-    # `sqerrors` is the square of all the errors.
-    sqerrors = ((func(a, b, c, d, e) - median(a, b, c, d, e))**2 for (a, b, c, d, e) in points)
+    # grade() returns correct answer
+    # grading returns comparison between tree's answer and grade()'s answer
+    sqerrors = ((grading(func(a, b, c, d, e),grade(a, b, c, d, e))**2) for (a, b, c, d, e) in points)
 
     # This computes the average of the squared errors, i.e., the mean squared error,
     # i.e., the MSE.
