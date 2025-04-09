@@ -134,7 +134,7 @@ def evalSymbReg(individual, points):
     # Evaluate the mean squared error between the expression
     # grade() returns correct answer
     # grading returns comparison between tree's answer and grade()'s answer
-    sqerrors = ((grading(func(a, b, c, d, e),grade(a, b, c, d, e))**2) for (a, b, c, d, e) in points)
+    sqerrors = ((grading(grade(a,b,c,d,func(a, b, c, d, e)),grade(a, b, c, d, e))**2) for (a, b, c, d, e) in points)
 
     # This computes the average of the squared errors, i.e., the mean squared error,
     # i.e., the MSE.
