@@ -59,31 +59,39 @@ def square(x):
 def double(x):
     return x+x
 
-# def if_then_else(bool, out1, out2):
-#     return out1 if bool else out2
+def if_then_else(bool, out1, out2):
+    return out1 if bool else out2
 
-pset = gp.PrimitiveSet("MAIN", 5)
+pset = gp.PrimitiveSetTyped("MAIN", [float, float, float, float, float], str)
 # from exec
-#pset.addPrimitive(if_then_else, [bool, float, float], float) # I dont think the types are right here
+pset.addPrimitive(if_then_else, [bool, str, str], str) # I dont think the types are right here
 
 # from int
-pset.addPrimitive(min, 2)
-pset.addPrimitive(max, 2)
-pset.addPrimitive(operator.add, 2)
-pset.addPrimitive(operator.sub, 2)
-pset.addPrimitive(operator.mul, 2)
-#pset.addPrimitive(protectedDiv, 2)
-pset.addPrimitive(operator.neg, 1)
+pset.addPrimitive(min, [float, float], float)
+pset.addPrimitive(max, [float, float], float)
+pset.addPrimitive(operator.add, [float, float], float)
+pset.addPrimitive(operator.sub, [float, float], float)
+pset.addPrimitive(operator.mul, [float, float], float)
+pset.addPrimitive(protectedDiv, [float, float], float)
+pset.addPrimitive(operator.neg, [float], float)
 
 # from bool
-#pset.addPrimitive(operator.and_, 2)  # Logical AND
-#pset.addPrimitive(operator.or_, 2)   # Logical OR
-#pset.addPrimitive(operator.not_, 1)  # Logical NOT
+pset.addPrimitive(operator.and_, [bool, bool], bool)  # Logical AND
+pset.addPrimitive(operator.or_, [bool, bool], bool)   # Logical OR
+pset.addPrimitive(operator.not_, [bool], bool)  # Logical NOT
 
-#pset.addPrimitive(operator.greater_or_equal, [float, float], bool)
-#pset.addPrimitive(operator.less_or_equal, [float, float], bool)
+pset.addPrimitive(operator.gt, [float, float], bool)
+pset.addPrimitive(operator.lt, [float, float], bool)
 
-pset.addEphemeralConstant("rand101", partial(random.randint, -1, 1))
+pset.addTerminal(True, bool)
+pset.addTerminal(False, bool)
+pset.addTerminal("A", str)
+pset.addTerminal("B", str)
+pset.addTerminal("C", str)
+pset.addTerminal("D", str)
+pset.addTerminal("F", str)
+
+# pset.addEphemeralConstant("rand101", partial(random.randint, -1, 1), int)
 
 pset.renameArguments(ARG0='a')
 pset.renameArguments(ARG1='b')
@@ -128,7 +136,9 @@ def grade(a, b, c, d, g):
     if g <= 100: return "A"
     if g > 100: return "Z" 
 
-def grading(knownResult, treeResult):
+def grading(knownResult, treeResult): # takes two letters and returns a number (representing how far the letters are away)
+    #print("known result: "+ str(knownResult))
+    #print("tree result: " + str(treeResult))
     scale = {
         "A": 5,
         "B": 4,
@@ -140,7 +150,7 @@ def grading(knownResult, treeResult):
     if (treeResult == "Z"):
         return 0
     else:
-        return 5 - abs((scale[knownResult] - scale[treeResult]))
+        return abs((scale[knownResult] - scale[treeResult]))
 
 def evalGrade(individual, points):
     # Compile the individual's tree into a callable function
@@ -150,20 +160,22 @@ def evalGrade(individual, points):
     errors = 0
     
     # Iterate through all input points
-    for A, B, C, D, G in points:
-        errors += (grading(
-            # actual result, as a letter
-            grade(A,B,C,D,G),
-            # tree result, as a letter
-            grade(A,B,C,D,int(func(A,B,C,D,G))) # func() will return a string (eventually after many changes), but for now its an int
-        )**2)
+    # for A, B, C, D, G in points:
+    #     errors += (grading(
+    #         # actual result, as a letter
+    #         grade(A,B,C,D,G),
+    #         # tree result, as a letter
+    #         func(A,B,C,D,G) # func() should return a string
+    #     )**2)
     
     # Return the average error as the fitness value (lower is better)
-    return errors / len(points),
+    # return (errors / len(points))
+
+    errors = ((grading(grade(a, b, c, d, g),func(a, b, c, d, g))**2) for (a, b, c, d, g) in points)
 
     # This computes the average of the squared errors, i.e., the mean squared error,
     # i.e., the MSE.
-    return math.fsum(sqerrors) / len(points),
+    return math.fsum(errors) / len(points),
 
 # The training cases are from -4 (inclusive) to +4 (exclusive) in increments of 0.25.
 toolbox.register("evaluate", evalGrade, points=inputs)
@@ -195,7 +207,7 @@ def main():
     # random.seed(318)
 
     # Sets the population size to 300.
-    pop = toolbox.population(n=300)
+    pop = toolbox.population(n=1000)
     # Tracks the single best individual over the entire run.
     hof = tools.HallOfFame(1)
 
@@ -208,7 +220,7 @@ def main():
     mstats.register("max", numpy.max)
 
     # Does the run, going for 40 generations (the 5th argument to `eaSimple`).
-    pop, log = algorithms.eaSimple(pop, toolbox, 0.5, 0.1, 200, stats=mstats,
+    pop, log = algorithms.eaSimple(pop, toolbox, 0.5, 0.1, 40, stats=mstats, # change 20 to 200 when testing results
                                    halloffame=hof, verbose=True)
 
     # Print the best individual
@@ -225,7 +237,7 @@ def main():
         predicted = func(A, B, C, D, grade_value)
         actual = grade(A, B, C, D, grade_value)
         print(f"Inputs: (A={A}, B={B}, C={C}, D={D}, G={grade_value})")
-        print(f"Predicted Grade: {grade(A,B,C,D, predicted)}, Actual Grade: {actual}")
+        print(f"Predicted Grade: {predicted}, Actual Grade: {actual}")
         print("-" * 40)
 
     return pop, log, hof
