@@ -59,7 +59,14 @@ def square(x):
 def double(x):
     return x+x
 
+# def if_then_else(bool, out1, out2):
+#     return out1 if bool else out2
+
 pset = gp.PrimitiveSet("MAIN", 5)
+# from exec
+#pset.addPrimitive(if_then_else, [bool, float, float], float) # I dont think the types are right here
+
+# from int
 pset.addPrimitive(min, 2)
 pset.addPrimitive(max, 2)
 pset.addPrimitive(operator.add, 2)
@@ -67,6 +74,14 @@ pset.addPrimitive(operator.sub, 2)
 pset.addPrimitive(operator.mul, 2)
 #pset.addPrimitive(protectedDiv, 2)
 pset.addPrimitive(operator.neg, 1)
+
+# from bool
+#pset.addPrimitive(operator.and_, 2)  # Logical AND
+#pset.addPrimitive(operator.or_, 2)   # Logical OR
+#pset.addPrimitive(operator.not_, 1)  # Logical NOT
+
+#pset.addPrimitive(operator.greater_or_equal, [float, float], bool)
+#pset.addPrimitive(operator.less_or_equal, [float, float], bool)
 
 pset.addEphemeralConstant("rand101", partial(random.randint, -1, 1))
 
@@ -104,17 +119,46 @@ def make_inputs(num_inputs, lower_bound, upper_bound):
 inputs = make_inputs(100, 0, 100)
 
 def grade(a, b, c, d, g):
-    values = [a, b, c, d, g]
-    #values.sort()
-    return values[4]
+    if g < 0: return "Z" # to have better handling of edge cases we could return the value of g
+    if g < d: return "F"
+    if g < c: return "D"
+    if g < b: return "C" 
+    if g < a: return "B"
+    if g <= 100: return "A"
+    if g > 100: return "Z" 
 
-def evalSymbReg(individual, points):
-    # Transform the tree expression in a callable function
+def grading(knownResult, treeResult):
+    scale = {
+        "A": 5,
+        "B": 4,
+        "C": 3,
+        "D": 2,
+        "F": 1,
+        }
+
+    if treeResult == "Z":
+        return 0
+    else:
+        return 5 - abs((scale[knownResult] - scale[treeResult]))
+
+def evalGrade(individual, points):
+    # Compile the individual's tree into a callable function
     func = toolbox.compile(expr=individual)
-    # Evaluate the mean squared error between the expression
-    # and the real function : x^9 + 3x^6 + 3x^3 + 2
-    # `sqerrors` is the square of all the errors.
-    sqerrors = ((func(a, b, c, d, e) - median(a, b, c, d, e))**2 for (a, b, c, d, e) in points)
+    
+    # Initialize the total error
+    errors = 0
+    
+    # Iterate through all input points
+    for A, B, C, D, G in points:
+        errors += (grading(
+            # actual result
+            grade(A,B,C,D,G),
+            # tree result
+            grade(A,B,C,D,int(func(A,B,C,D,G))) # This will return a string (eventually after many changes), but for now its an int
+        )**2)
+    
+    # Return the average error as the fitness value (lower is better)
+    return errors / len(points),
 
     # This computes the average of the squared errors, i.e., the mean squared error,
     # i.e., the MSE.
