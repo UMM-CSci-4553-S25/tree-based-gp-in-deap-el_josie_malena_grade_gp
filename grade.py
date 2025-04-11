@@ -68,12 +68,16 @@ pset.addPrimitive(operator.mul, 2)
 pset.addPrimitive(protectedDiv, 2)
 pset.addPrimitive(operator.neg, 1)
 
-# pset.addPrimitive(operator.gt, 2) 
-# pset.addPrimitive(operator.lt, 2) 
-# pset.addPrimitive(operator.ge, 2) 
-# pset.addPrimitive(operator.le, 2) 
-# pset.addPrimitive(operator.eq, 2)
-# pset.addPrimitive(operator.ne, 2) 
+pset.addPrimitive(operator.gt, 2) 
+pset.addPrimitive(operator.lt, 2) 
+pset.addPrimitive(operator.ge, 2) 
+pset.addPrimitive(operator.le, 2) 
+pset.addPrimitive(operator.eq, 2)
+pset.addPrimitive(operator.ne, 2)
+# pset.addPrimitive(operator.and_, 2)
+# pset.addPrimitive(operator.or_, 2)
+# pset.addPrimitive(operator.not_, 1)
+
 
 
 pset.addEphemeralConstant("rand101", partial(random.randint, -1, 1))
@@ -96,6 +100,9 @@ toolbox.register("expr", gp.genHalfAndHalf, pset=pset, min_=1, max_=2)
 toolbox.register("individual", tools.initIterate, creator.Individual, toolbox.expr)
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 toolbox.register("compile", gp.compile, pset=pset)
+
+def normalize(value, min_val, max_val):
+    return (value - min_val) / (max_val - min_val)
 
 # The the letter grades must be in descending order 
 def make_tuple():
@@ -121,7 +128,7 @@ def grade(a, b, c, d, g):
     return "A"
 
 # Map grades to numeric values for fitness calculation
-grade_map = {"A": 4, "B": 3, "C": 2, "D": 1, "F": 0, "Z": -1}
+grade_map = {"A": 5, "B": 4, "C": 3, "D": 2, "F": 1, "Z": 0}
 
 def evalGrade(individual, points):
     # Compile the individual's tree into a callable function
@@ -133,14 +140,14 @@ def evalGrade(individual, points):
     # Iterate through all input points
     for A, B, C, D, grade_value in points:
         # Use the individual's function to predict the grade
-        actual = grade(A,B,C,D,func(A, B, C, D, grade_value))
+        actual = func(A, B, C, D, grade_value)
         
         # Get the actual grade using the target function
         predicted = grade(A, B, C, D, grade_value)
         
         # Calculate the error as the absolute difference between predicted and actual grades
         # Grades are mapped to numeric values using grade_map
-        errors += abs(grade_map[actual] - grade_map[predicted])
+        errors += abs(actual - grade_map[predicted])
     
     # Return the average error as the fitness value (lower is better)
     return errors / len(points),
@@ -192,11 +199,11 @@ def main():
 
     # Print predictions vs actual grades
     print("\nPredictions vs Actual Grades:")
-    for A, B, C, D, grade_value in inputs[:8]:  # Limit to 8 examples for readability
+    for A, B, C, D, grade_value in inputs[:1]:  # Limit to 1 example for readability
         predicted = func(A, B, C, D, grade_value)
         actual = grade(A, B, C, D, grade_value)
         print(f"Inputs: (A={A}, B={B}, C={C}, D={D}, G={grade_value})")
-        print(f"Predicted Grade: {grade(A,B,C,D, predicted)}, Actual Grade: {actual}")
+        print(f"Predicted Grade: {grade(A,B,C,D, predicted)}, Expected Grade: {actual}")
         print("-" * 40)
 
     return pop, log, hof
