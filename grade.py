@@ -67,9 +67,14 @@ pset.addPrimitive(operator.sub, 2)
 pset.addPrimitive(operator.mul, 2)
 pset.addPrimitive(protectedDiv, 2)
 pset.addPrimitive(operator.neg, 1)
-pset.addPrimitive(operator.and_, 2)  # Logical AND
-pset.addPrimitive(operator.or_, 2)   # Logical OR
-pset.addPrimitive(operator.not_, 1)  # Logical NOT
+
+pset.addPrimitive(operator.gt, 2) 
+pset.addPrimitive(operator.lt, 2) 
+pset.addPrimitive(operator.ge, 2) 
+pset.addPrimitive(operator.le, 2) 
+pset.addPrimitive(operator.eq, 2)
+pset.addPrimitive(operator.ne, 2) 
+
 
 pset.addEphemeralConstant("rand101", partial(random.randint, -1, 1))
 
