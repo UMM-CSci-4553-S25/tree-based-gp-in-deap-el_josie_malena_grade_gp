@@ -68,12 +68,12 @@ pset.addPrimitive(operator.mul, 2)
 pset.addPrimitive(protectedDiv, 2)
 pset.addPrimitive(operator.neg, 1)
 
-pset.addPrimitive(operator.gt, 2) 
-pset.addPrimitive(operator.lt, 2) 
-pset.addPrimitive(operator.ge, 2) 
-pset.addPrimitive(operator.le, 2) 
-pset.addPrimitive(operator.eq, 2)
-pset.addPrimitive(operator.ne, 2) 
+# pset.addPrimitive(operator.gt, 2) 
+# pset.addPrimitive(operator.lt, 2) 
+# pset.addPrimitive(operator.ge, 2) 
+# pset.addPrimitive(operator.le, 2) 
+# pset.addPrimitive(operator.eq, 2)
+# pset.addPrimitive(operator.ne, 2) 
 
 
 pset.addEphemeralConstant("rand101", partial(random.randint, -1, 1))
@@ -113,7 +113,7 @@ def make_inputs(num_inputs, lower_bound, upper_bound):
 inputs = make_inputs(100, 0, 100)
 
 def grade(a, b, c, d, g):
-    if g < 0: return "Yikes!"
+    if g < 0: return "Z"
     if g < d: return "F"
     if g < c: return "D"
     if g < b: return "C"
@@ -121,7 +121,7 @@ def grade(a, b, c, d, g):
     return "A"
 
 # Map grades to numeric values for fitness calculation
-grade_map = {"A": 4, "B": 3, "C": 2, "D": 1, "F": 0}
+grade_map = {"A": 4, "B": 3, "C": 2, "D": 1, "F": 0, "Z": -1}
 
 def evalGrade(individual, points):
     # Compile the individual's tree into a callable function
@@ -133,14 +133,14 @@ def evalGrade(individual, points):
     # Iterate through all input points
     for A, B, C, D, grade_value in points:
         # Use the individual's function to predict the grade
-        predicted = grade(A,B,C,D,func(A, B, C, D, grade_value))
+        actual = grade(A,B,C,D,func(A, B, C, D, grade_value))
         
         # Get the actual grade using the target function
-        actual = grade(A, B, C, D, grade_value)
+        predicted = grade(A, B, C, D, grade_value)
         
         # Calculate the error as the absolute difference between predicted and actual grades
         # Grades are mapped to numeric values using grade_map
-        errors += abs(grade_map.get(predicted, 0) - grade_map[actual])
+        errors += abs(grade_map[actual] - grade_map[predicted])
     
     # Return the average error as the fitness value (lower is better)
     return errors / len(points),
