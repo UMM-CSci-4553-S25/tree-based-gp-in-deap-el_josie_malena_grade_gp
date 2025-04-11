@@ -104,12 +104,13 @@ toolbox.register("individual", tools.initIterate, creator.Individual, toolbox.ex
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 toolbox.register("compile", gp.compile, pset=pset)
 
+# The the letter grades must be in descending order 
 def make_tuple():
-    A = random.randint(4, 101)
-    B = random.randint(3, A)
-    C = random.randint(2, B)
-    D = random.randint(1, C)
-    G = random.randint(0, 101)
+    A = random.randint(7, 100)
+    B = random.randint(5, A-1)
+    C = random.randint(3, B-1)
+    D = random.randint(1, C-1)
+    G = random.randint(0, 100)
     return (A, B, C, D, G)
 
 def make_inputs(num_inputs, lower_bound, upper_bound):
@@ -136,7 +137,7 @@ def grading(knownResult, treeResult):
         "F": 1,
         }
 
-    if treeResult == "Z":
+    if (treeResult == "Z"):
         return 0
     else:
         return 5 - abs((scale[knownResult] - scale[treeResult]))
@@ -151,10 +152,10 @@ def evalGrade(individual, points):
     # Iterate through all input points
     for A, B, C, D, G in points:
         errors += (grading(
-            # actual result
+            # actual result, as a letter
             grade(A,B,C,D,G),
-            # tree result
-            grade(A,B,C,D,int(func(A,B,C,D,G))) # This will return a string (eventually after many changes), but for now its an int
+            # tree result, as a letter
+            grade(A,B,C,D,int(func(A,B,C,D,G))) # func() will return a string (eventually after many changes), but for now its an int
         )**2)
     
     # Return the average error as the fitness value (lower is better)
@@ -165,7 +166,7 @@ def evalGrade(individual, points):
     return math.fsum(sqerrors) / len(points),
 
 # The training cases are from -4 (inclusive) to +4 (exclusive) in increments of 0.25.
-toolbox.register("evaluate", evalSymbReg, points=inputs)
+toolbox.register("evaluate", evalGrade, points=inputs)
 
 # Tournament selection with tournament size 3
 toolbox.register("select", tools.selTournament, tournsize=3)
@@ -210,11 +211,22 @@ def main():
     pop, log = algorithms.eaSimple(pop, toolbox, 0.5, 0.1, 200, stats=mstats,
                                    halloffame=hof, verbose=True)
 
-    # print log
+    # Print the best individual
+    print("\nBest Individual:")
+    best_individual = hof[0]
+    print(str(best_individual))
 
-    # Print the members of the hall of fame
-    for winner in hof:
-        print(str(winner))
+    # Compile the best individual into a callable function
+    func = toolbox.compile(expr=best_individual)
+
+        # Print predictions vs actual grades
+    print("\nPredictions vs Actual Grades:")
+    for A, B, C, D, grade_value in inputs[:8]:  # Limit to 8 examples for readability
+        predicted = func(A, B, C, D, grade_value)
+        actual = grade(A, B, C, D, grade_value)
+        print(f"Inputs: (A={A}, B={B}, C={C}, D={D}, G={grade_value})")
+        print(f"Predicted Grade: {grade(A,B,C,D, predicted)}, Actual Grade: {actual}")
+        print("-" * 40)
 
     return pop, log, hof
 
