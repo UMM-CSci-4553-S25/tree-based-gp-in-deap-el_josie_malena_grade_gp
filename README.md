@@ -12,9 +12,6 @@ Ran into issues implementing booleans, need to ask Nic about in class.
 
 I had a chance to talk to Nic after class about the functions we include in the GA's toolbox. These should be added around line 70. Im not entirely sure what constitutes the boolean functions group, but the one function he recommended we include from 'exec' is an if statement. (other functions in 'exec' were loop variants).
 
-Problem Description:
-"Grade Given 5 integers, the first four represent the lower numeric thresholds for achieving an A, B, C, and D, and will be distinct and in descending order. The fifth represents the student’s numeric grade. The program must print Student has a X grade., where X is A, B, C, D, or F depending on the thresholds and the numeric grade.
-
 Specifics
 
 | Name | Inputs | Outputs | Train | Test |
@@ -30,3 +27,23 @@ Data types uses:
 - print --> print()
 
 Constants and strings provided were: "Student has a ”, “ grade.”, “A”, “B”, “C”, “D”, “F”, integer ERC
+
+## Report
+
+### Introduction
+
+Problem Description from PSB1:
+"Grade Given 5 integers, the first four represent the lower numeric thresholds for achieving an A, B, C, and D, and will be distinct and in descending order. The fifth represents the student’s numeric grade. The program must print Student has a X grade., where X is A, B, C, D, or F depending on the thresholds and the numeric grade."
+
+We chose this problem because [] and its relevant because []
+
+### Methodology
+
+* The primitive set you defined and why you chose it.
+* The fitness function used and how it aligns with the problem's evaluation criteria.
+* The genetic operators and their parameters, along with a justification for your choices.
+* The evolutionary algorithm setup (population size, generations, selection method, etc.).
+* How you handled the input data for the benchmark problem.
+* Any specific design choices or challenges you encountered during implementation.
+
+## Some results of the GA
