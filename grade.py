@@ -127,8 +127,9 @@ def make_inputs(num_inputs, lower_bound, upper_bound):
 # Make 100 random input triples where each value v is 0≤v<100.
 inputs = make_inputs(100, 0, 100)
 
+# This function is not given to the GP, and is only used for scoring
 def grade(a, b, c, d, g):
-    if g < 0: return "Z" # to have better handling of edge cases we could return the value of g
+    if g < 0: return "Z" # indicates something went wrong with make_tuple()
     if g < d: return "F"
     if g < c: return "D"
     if g < b: return "C" 
@@ -136,9 +137,8 @@ def grade(a, b, c, d, g):
     if g <= 100: return "A"
     if g > 100: return "Z" 
 
-def grading(knownResult, treeResult): # takes two letters and returns a number (representing how far the letters are away)
-    #print("known result: "+ str(knownResult))
-    #print("tree result: " + str(treeResult))
+# takes two letters and returns a number (representing how far away the letters are)
+def grading(knownResult, treeResult): 
     scale = {
         "A": 5,
         "B": 4,
@@ -158,23 +158,13 @@ def evalGrade(individual, points):
     
     # Initialize the total error
     errors = 0
-    
-    # Iterate through all input points
-    # for A, B, C, D, G in points:
-    #     errors += (grading(
-    #         # actual result, as a letter
-    #         grade(A,B,C,D,G),
-    #         # tree result, as a letter
-    #         func(A,B,C,D,G) # func() should return a string
-    #     )**2)
-    
-    # Return the average error as the fitness value (lower is better)
-    # return (errors / len(points))
-
-    errors = ((grading(grade(a, b, c, d, g),func(a, b, c, d, g))**2) for (a, b, c, d, g) in points)
-
+        
     # This computes the average of the squared errors, i.e., the mean squared error,
     # i.e., the MSE.
+    errors = ((grading(grade(a, b, c, d, g),func(a, b, c, d, g))**2) for (a, b, c, d, g) in points)
+
+    # Return the average error as the fitness value (lower is better)
+    # return (errors / len(points))
     return math.fsum(errors) / len(points),
 
 # The training cases are from -4 (inclusive) to +4 (exclusive) in increments of 0.25.
@@ -219,8 +209,8 @@ def main():
     mstats.register("min", numpy.min)
     mstats.register("max", numpy.max)
 
-    # Does the run, going for 40 generations (the 5th argument to `eaSimple`).
-    pop, log = algorithms.eaSimple(pop, toolbox, 0.5, 0.1, 40, stats=mstats, # change 20 to 200 when testing results
+    # Does the run, going for 200 generations (the 5th argument to `eaSimple`).
+    pop, log = algorithms.eaSimple(pop, toolbox, 0.5, 0.1, 200, stats=mstats,
                                    halloffame=hof, verbose=True)
 
     # Print the best individual
@@ -231,14 +221,14 @@ def main():
     # Compile the best individual into a callable function
     func = toolbox.compile(expr=best_individual)
 
-        # Print predictions vs actual grades
-    print("\nPredictions vs Actual Grades:")
-    for A, B, C, D, grade_value in inputs[:8]:  # Limit to 8 examples for readability
-        predicted = func(A, B, C, D, grade_value)
-        actual = grade(A, B, C, D, grade_value)
-        print(f"Inputs: (A={A}, B={B}, C={C}, D={D}, G={grade_value})")
-        print(f"Predicted Grade: {predicted}, Actual Grade: {actual}")
-        print("-" * 40)
+    # Print predictions vs actual grades
+    # print("\nPredictions vs Actual Grades:")
+    # for A, B, C, D, grade_value in inputs[:8]:  # Limit to 8 examples for readability
+    #     predicted = func(A, B, C, D, grade_value)
+    #     actual = grade(A, B, C, D, grade_value)
+    #     print(f"Inputs: (A={A}, B={B}, C={C}, D={D}, G={grade_value})")
+    #     print(f"Predicted Grade: {predicted}, Actual Grade: {actual}")
+    #     print("-" * 40)
 
     return pop, log, hof
 
