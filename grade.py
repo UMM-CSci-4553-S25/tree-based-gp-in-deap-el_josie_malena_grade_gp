@@ -59,16 +59,39 @@ def square(x):
 def double(x):
     return x+x
 
-pset = gp.PrimitiveSet("MAIN", 5)
-pset.addPrimitive(min, 2)
-pset.addPrimitive(max, 2)
-pset.addPrimitive(operator.add, 2)
-pset.addPrimitive(operator.sub, 2)
-pset.addPrimitive(operator.mul, 2)
-#pset.addPrimitive(protectedDiv, 2)
-pset.addPrimitive(operator.neg, 1)
+def if_then_else(bool, out1, out2):
+    return out1 if bool else out2
 
-pset.addEphemeralConstant("rand101", partial(random.randint, -1, 1))
+pset = gp.PrimitiveSetTyped("MAIN", [float, float, float, float, float], str)
+# from exec
+pset.addPrimitive(if_then_else, [bool, str, str], str) # I dont think the types are right here
+
+# from int
+pset.addPrimitive(min, [float, float], float)
+pset.addPrimitive(max, [float, float], float)
+pset.addPrimitive(operator.add, [float, float], float)
+pset.addPrimitive(operator.sub, [float, float], float)
+pset.addPrimitive(operator.mul, [float, float], float)
+pset.addPrimitive(protectedDiv, [float, float], float)
+pset.addPrimitive(operator.neg, [float], float)
+
+# from bool
+pset.addPrimitive(operator.and_, [bool, bool], bool)  # Logical AND
+pset.addPrimitive(operator.or_, [bool, bool], bool)   # Logical OR
+pset.addPrimitive(operator.not_, [bool], bool)  # Logical NOT
+
+pset.addPrimitive(operator.gt, [float, float], bool)
+pset.addPrimitive(operator.lt, [float, float], bool)
+
+pset.addTerminal(True, bool)
+pset.addTerminal(False, bool)
+pset.addTerminal("A", str)
+pset.addTerminal("B", str)
+pset.addTerminal("C", str)
+pset.addTerminal("D", str)
+pset.addTerminal("F", str)
+
+# pset.addEphemeralConstant("rand101", partial(random.randint, -1, 1), int)
 
 pset.renameArguments(ARG0='a')
 pset.renameArguments(ARG1='b')
@@ -89,12 +112,13 @@ toolbox.register("individual", tools.initIterate, creator.Individual, toolbox.ex
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 toolbox.register("compile", gp.compile, pset=pset)
 
+# The the letter grades must be in descending order 
 def make_tuple():
-    A = random.randint(4, 101)
-    B = random.randint(3, A)
-    C = random.randint(2, B)
-    D = random.randint(1, C)
-    G = random.randint(0, 101)
+    A = random.randint(7, 100)
+    B = random.randint(5, A-1)
+    C = random.randint(3, B-1)
+    D = random.randint(1, C-1)
+    G = random.randint(0, 100)
     return (A, B, C, D, G)
 
 def make_inputs(num_inputs, lower_bound, upper_bound):
@@ -104,24 +128,57 @@ def make_inputs(num_inputs, lower_bound, upper_bound):
 inputs = make_inputs(100, 0, 100)
 
 def grade(a, b, c, d, g):
-    values = [a, b, c, d, g]
-    #values.sort()
-    return values[4]
+    if g < 0: return "Z" # to have better handling of edge cases we could return the value of g
+    if g < d: return "F"
+    if g < c: return "D"
+    if g < b: return "C" 
+    if g < a: return "B"
+    if g <= 100: return "A"
+    if g > 100: return "Z" 
 
-def evalSymbReg(individual, points):
-    # Transform the tree expression in a callable function
+def grading(knownResult, treeResult): # takes two letters and returns a number (representing how far the letters are away)
+    #print("known result: "+ str(knownResult))
+    #print("tree result: " + str(treeResult))
+    scale = {
+        "A": 5,
+        "B": 4,
+        "C": 3,
+        "D": 2,
+        "F": 1,
+        }
+
+    if (treeResult == "Z"):
+        return 0
+    else:
+        return abs((scale[knownResult] - scale[treeResult]))
+
+def evalGrade(individual, points):
+    # Compile the individual's tree into a callable function
     func = toolbox.compile(expr=individual)
-    # Evaluate the mean squared error between the expression
-    # and the real function : x^9 + 3x^6 + 3x^3 + 2
-    # `sqerrors` is the square of all the errors.
-    sqerrors = ((func(a, b, c, d, e) - median(a, b, c, d, e))**2 for (a, b, c, d, e) in points)
+    
+    # Initialize the total error
+    errors = 0
+    
+    # Iterate through all input points
+    # for A, B, C, D, G in points:
+    #     errors += (grading(
+    #         # actual result, as a letter
+    #         grade(A,B,C,D,G),
+    #         # tree result, as a letter
+    #         func(A,B,C,D,G) # func() should return a string
+    #     )**2)
+    
+    # Return the average error as the fitness value (lower is better)
+    # return (errors / len(points))
+
+    errors = ((grading(grade(a, b, c, d, g),func(a, b, c, d, g))**2) for (a, b, c, d, g) in points)
 
     # This computes the average of the squared errors, i.e., the mean squared error,
     # i.e., the MSE.
-    return math.fsum(sqerrors) / len(points),
+    return math.fsum(errors) / len(points),
 
 # The training cases are from -4 (inclusive) to +4 (exclusive) in increments of 0.25.
-toolbox.register("evaluate", evalSymbReg, points=inputs)
+toolbox.register("evaluate", evalGrade, points=inputs)
 
 # Tournament selection with tournament size 3
 toolbox.register("select", tools.selTournament, tournsize=3)
@@ -150,7 +207,7 @@ def main():
     # random.seed(318)
 
     # Sets the population size to 300.
-    pop = toolbox.population(n=300)
+    pop = toolbox.population(n=1000)
     # Tracks the single best individual over the entire run.
     hof = tools.HallOfFame(1)
 
@@ -163,14 +220,25 @@ def main():
     mstats.register("max", numpy.max)
 
     # Does the run, going for 40 generations (the 5th argument to `eaSimple`).
-    pop, log = algorithms.eaSimple(pop, toolbox, 0.5, 0.1, 200, stats=mstats,
+    pop, log = algorithms.eaSimple(pop, toolbox, 0.5, 0.1, 40, stats=mstats, # change 20 to 200 when testing results
                                    halloffame=hof, verbose=True)
 
-    # print log
+    # Print the best individual
+    print("\nBest Individual:")
+    best_individual = hof[0]
+    print(str(best_individual))
 
-    # Print the members of the hall of fame
-    for winner in hof:
-        print(str(winner))
+    # Compile the best individual into a callable function
+    func = toolbox.compile(expr=best_individual)
+
+        # Print predictions vs actual grades
+    print("\nPredictions vs Actual Grades:")
+    for A, B, C, D, grade_value in inputs[:8]:  # Limit to 8 examples for readability
+        predicted = func(A, B, C, D, grade_value)
+        actual = grade(A, B, C, D, grade_value)
+        print(f"Inputs: (A={A}, B={B}, C={C}, D={D}, G={grade_value})")
+        print(f"Predicted Grade: {predicted}, Actual Grade: {actual}")
+        print("-" * 40)
 
     return pop, log, hof
 
