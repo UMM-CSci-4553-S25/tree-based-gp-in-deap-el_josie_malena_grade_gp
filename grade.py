@@ -13,7 +13,7 @@
 #    You should have received a copy of the GNU Lesser General Public
 #    License along with EAP. If not, see <http://www.gnu.org/licenses/>.
 
-# This is an implementation of the "median" problem from Tom Helmuth's
+# This is an implementation of the "grade" problem from Tom Helmuth's
 # software synthesis benchmark suite (PSB1):
 #
 # T. Helmuth and L. Spector. General Program Synthesis Benchmark Suite. In
@@ -24,13 +24,6 @@
 # Benchmarks for Automated Repair of C Programs," in IEEE Transactions on
 # Software Engineering, vol. 41, no. 12, pp. 1236-1256, Dec. 1 2015.
 # doi: 10.1109/TSE.2015.2454513
-#
-# The goal of this problem is to take three integer inputs and return the
-# median (middle) of those three values.
-#
-# This problem is quite easy if you have both `Min` and `Max` instructions,
-# or a `Clamp` instruction, but can be more difficult without those
-# instruction.
 
 import operator
 import math
@@ -53,19 +46,13 @@ def protectedDiv(left, right):
     except ZeroDivisionError:
         return 1
 
-def square(x):
-    return x*x
-
-def double(x):
-    return x+x
-
 def if_then_else(bool, out1, out2):
     return out1 if bool else out2
 
+# Set Primitives
 pset = gp.PrimitiveSetTyped("MAIN", [float, float, float, float, float], str)
 # from exec
 pset.addPrimitive(if_then_else, [bool, str, str], str) # I dont think the types are right here
-
 # from int
 pset.addPrimitive(min, [float, float], float)
 pset.addPrimitive(max, [float, float], float)
@@ -74,15 +61,14 @@ pset.addPrimitive(operator.sub, [float, float], float)
 pset.addPrimitive(operator.mul, [float, float], float)
 pset.addPrimitive(protectedDiv, [float, float], float)
 pset.addPrimitive(operator.neg, [float], float)
-
 # from bool
 pset.addPrimitive(operator.and_, [bool, bool], bool)  # Logical AND
 pset.addPrimitive(operator.or_, [bool, bool], bool)   # Logical OR
 pset.addPrimitive(operator.not_, [bool], bool)  # Logical NOT
-
 pset.addPrimitive(operator.gt, [float, float], bool)
 pset.addPrimitive(operator.lt, [float, float], bool)
 
+# Add terminals
 pset.addTerminal(True, bool)
 pset.addTerminal(False, bool)
 pset.addTerminal("A", str)
@@ -91,8 +77,7 @@ pset.addTerminal("C", str)
 pset.addTerminal("D", str)
 pset.addTerminal("F", str)
 
-# pset.addEphemeralConstant("rand101", partial(random.randint, -1, 1), int)
-
+# Rename Arguments
 pset.renameArguments(ARG0='a')
 pset.renameArguments(ARG1='b')
 pset.renameArguments(ARG2='c')
@@ -135,7 +120,7 @@ def grade(a, b, c, d, g):
     if g < b: return "C" 
     if g < a: return "B"
     if g <= 100: return "A"
-    if g > 100: return "Z" 
+    if g > 100: return "Z" # indicates something went wrong with make_tuple()
 
 # takes two letters and returns a number (representing how far away the letters are)
 def grading(knownResult, treeResult): 
@@ -146,7 +131,6 @@ def grading(knownResult, treeResult):
         "D": 2,
         "F": 1,
         }
-
     if (treeResult == "Z"):
         return 0
     else:
@@ -155,19 +139,16 @@ def grading(knownResult, treeResult):
 def evalGrade(individual, points):
     # Compile the individual's tree into a callable function
     func = toolbox.compile(expr=individual)
-    
     # Initialize the total error
     errors = 0
-        
     # This computes the average of the squared errors, i.e., the mean squared error,
     # i.e., the MSE.
     errors = ((grading(grade(a, b, c, d, g),func(a, b, c, d, g))**2) for (a, b, c, d, g) in points)
-
     # Return the average error as the fitness value (lower is better)
     # return (errors / len(points))
     return math.fsum(errors) / len(points),
 
-# The training cases are from -4 (inclusive) to +4 (exclusive) in increments of 0.25.
+# The training cases are 100 randomly generated grade boundaries and student grades
 toolbox.register("evaluate", evalGrade, points=inputs)
 
 # Tournament selection with tournament size 3
@@ -196,7 +177,7 @@ toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"), max
 def main():
     # random.seed(318)
 
-    # Sets the population size to 300.
+    # Sets the population size, originally 300.
     pop = toolbox.population(n=1000)
     # Tracks the single best individual over the entire run.
     hof = tools.HallOfFame(1)
