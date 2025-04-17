@@ -1,7 +1,3 @@
-PS C:\Users\ilike\Desktop\Spring 2025\AI - CSCI\tree-based-gp-in-deap-el_josie_malena_grade_gp> & C:/Users/ilike/AppData/Local/Microsoft/WindowsApps/python3.11.exe "c:/Users/ilike/Desktop/Spring 2025/AI - CSCI/tree-based-gp-in-deap-el_josie_malena_grade_gp/grade.py"
-                                    fitness                                           size
-                ----------------------------------------------- -----------------------------------------------
-gen     nevals  avg     gen     max     min     nevals  std     avg     gen     max     min     nevals  std    
 0       1000    4.45615 0       10.57   0.48    1000    2.43232 6.791   0       12      4       1000    3.40255
 1       553     3.08319 1       9.94    0.48    553     1.6697  7.377   1       23      1       553     3.70093
 2       540     2.6226  2       9.07    0.48    540     1.47606 7.873   2       25      1       540     4.06828
@@ -203,6 +199,3 @@ gen     nevals  avg     gen     max     min     nevals  std     avg     gen     
 198     563     0.06306 198     8.36    0       563     0.45036         276.652 198     521     17      563   83.2179
 199     547     0.05961 199     8.36    0       547     0.436165        277.853 199     522     15      547   80.7674
 200     562     0.05214 200     8.36    0       562     0.392019        275.996 200     522     34      562   80.1995
-
-Best Individual:
-if_then_else(gt(b, g), if_then_else(gt(g, d), if_then_else(lt(g, c), 'D', if_then_else(not_(False), if_then_else(False, 'D', 'C'), if_then_else(True, 'B', 'A'))), if_then_else(gt(g, d), if_then_else(False, if_then_else(gt(max(a, sub(a, g)), c), 'A', 'D'), 'C'), if_then_else(False, 'B', 'F'))), if_then_else(or_(lt(b, b), gt(a, g)), 'B', 'A'))

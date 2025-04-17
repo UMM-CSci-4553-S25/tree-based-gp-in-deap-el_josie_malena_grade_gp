@@ -1,4 +1,3 @@
-gen     nevals  avg     gen     max     min     nevals  std     avg     gen     max     min     nevals  std    
 0       1000    4.65173 0       10.89   0.63    1000    3.25343 7.163   0       12      4       1000    3.48489
 1       530     2.8596  1       10.89   0.63    530     2.04442 7.467   1       22      1       530     3.76894
 2       558     2.25564 2       10.44   0.63    558     1.80179 7.957   2       23      1       558     3.94704
@@ -200,6 +199,3 @@ gen     nevals  avg     gen     max     min     nevals  std     avg     gen     
 198     574     0.09275 198     7.36    0       574     0.488502        170.467 198     331     4       574   53.8933
 199     555     0.10762 199     7.36    0       555     0.674273        173.035 199     337     4       555   55.8137
 200     570     0.09726 200     7.36    0       570     0.584548        174.212 200     339     1       570   55.164
-
-Best Individual:
-if_then_else(gt(g, a), if_then_else(True, if_then_else(lt(c, b), 'A', 'B'), if_then_else(gt(a, protectedDiv(b, g)), if_then_else(gt(c, g), 'B', if_then_else(gt(b, g), if_then_else(gt(b, g), if_then_else(False, 'A', if_then_else(False, if_then_else(gt(g, g), 'F', 'C'), if_then_else(or_(False, True), if_then_else(False, 'F', 'B'), if_then_else(True, if_then_else(True, 'D', 'F'), if_then_else(gt(g, g), 'B', if_then_else(False, if_then_else(gt(c, b), if_then_else(and_(True, False), if_then_else(False, 'D', 'B'), if_then_else(True, 'B', 'B')), 'F'), 'A')))))), if_then_else(False, 'B', 'C')), if_then_else(gt(a, g), if_then_else(gt(g, b), 'B', 'D'), if_then_else(False, 'F', 'A')))), 'C')), if_then_else(gt(b, g), if_then_else(gt(min(d, a), g), 'F', if_then_else(gt(c, g), 'D', 'C')), 'B'))

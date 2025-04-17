@@ -1,0 +1,36 @@
+Column Names:
+                                    fitness                                           size
+                ----------------------------------------------- -----------------------------------------------
+gen     nevals  avg     gen     max     min     nevals  std     avg     gen     max     min     nevals  std    
+
+
+Best Individuals:
+1
+if_then_else(gt(b, g), if_then_else(True, if_then_else(lt(c, g), if_then_else(False, 'D', 'C'), if_then_else(False, 'A', 'D')), 'A'), if_then_else(lt(g, a), 'B', if_then_else(lt(g, a), if_then_else(gt(add(a, g), protectedDiv(g, g)), 'C', 'C'), 'A')))
+
+2
+if_then_else(gt(b, g), if_then_else(gt(g, d), if_then_else(lt(g, c), 'D', if_then_else(not_(False), if_then_else(False, 'D', 'C'), if_then_else(True, 'B', 'A'))), if_then_else(gt(g, d), if_then_else(False, if_then_else(gt(max(a, sub(a, g)), c), 'A', 'D'), 'C'), if_then_else(False, 'B', 'F'))), if_then_else(or_(lt(b, b), gt(a, g)), 'B', 'A'))
+
+3
+if_then_else(gt(b, g), if_then_else(gt(c, g), if_then_else(gt(c, add(g, d)), if_then_else(False, 'F', 'D'), if_then_else(True, 'F', 'C')), 'C'), if_then_else(gt(g, neg(c)), if_then_else(gt(c, c), 'D', if_then_else(gt(d, b), if_then_else(True, if_then_else(gt(d, b), if_then_else(and_(or_(False, gt(g, c)), True), if_then_else(gt(c, b), 'B', if_then_else(gt(a, mul(mul(d, g), mul(b, a))), 'A', if_then_else(gt(c, neg(b)), 'A', if_then_else(gt(c, g), 'D', 'C')))), if_then_else(and_(False, True), if_then_else(gt(g, max(g, g)), if_then_else(False, 'A', 'B'), 'C'), 'D')), if_then_else(gt(c, a), if_then_else(gt(sub(g, c), c), if_then_else(gt(g, a), if_then_else(gt(g, neg(c)), 'F', 'C'), if_then_else(not_(True), 'A', 'B')), if_then_else(True, 'D', 'F')), if_then_else(gt(max(g, a), max(g, c)), 'B', if_then_else(gt(add(g, b), mul(c, g)), if_then_else(True, 'B', 'F'), if_then_else(gt(b, neg(g)), 'A', 'A'))))), if_then_else(gt(g, a), 'C', 'A')), if_then_else(False, 'A', if_then_else(gt(g, a), 'A', if_then_else(gt(max(c, a), max(g, c)), 'B', if_then_else(lt(g, add(g, d)), 'A', if_then_else(gt(g, neg(c)), 'A', 'B'))))))), 'B'))
+
+4
+if_then_else(gt(d, g), if_then_else(lt(a, g), 'F', 'F'), if_then_else(lt(a, g), 'A', if_then_else(gt(max(g, c), g), 'D', if_then_else(not_(lt(g, b)), 'B', 'C'))))
+
+5
+if_then_else(lt(g, b), if_then_else(lt(g, c), 'D', 'C'), if_then_else(gt(a, g), if_then_else(True, 'B', 'B'), if_then_else(False, if_then_else(True, 'A', 'C'), 'A')))
+
+6
+if_then_else(gt(b, g), if_then_else(True, if_then_else(or_(gt(max(a, g), g), True), if_then_else(lt(g, c), if_then_else(lt(g, d), if_then_else(or_(True, True), 'F', 'D'), 'D'), if_then_else(True, 'C', 'D')), if_then_else(or_(False, lt(max(a, d), a)), if_then_else(lt(g, c), 'D', if_then_else(False, 'A', if_then_else(or_(True, True), if_then_else(lt(c, d), if_then_else(True, 'F', if_then_else(True, 'D', 'F')), 'D'), 'B'))), 'D')), 'B'), if_then_else(and_(gt(max(protectedDiv(protectedDiv(a, g), neg(c)), max(a, d)), g), lt(g, a)), 'B', 'A'))
+
+7
+if_then_else(gt(b, g), if_then_else(lt(c, g), 'C', if_then_else(lt(g, d), if_then_else(gt(b, c), 'F', 'A'), if_then_else(gt(d, g), 'D', if_then_else(lt(c, g), 'C', if_then_else(lt(add(mul(b, sub(sub(g, g), sub(g, c))), neg(g)), d), if_then_else(gt(c, g), 'F', 'C'), 'D'))))), if_then_else(False, 'F', 'A'))
+
+8
+if_then_else(gt(g, a), if_then_else(True, if_then_else(lt(c, b), 'A', 'B'), if_then_else(gt(a, protectedDiv(b, g)), if_then_else(gt(c, g), 'B', if_then_else(gt(b, g), if_then_else(gt(b, g), if_then_else(False, 'A', if_then_else(False, if_then_else(gt(g, g), 'F', 'C'), if_then_else(or_(False, True), if_then_else(False, 'F', 'B'), if_then_else(True, if_then_else(True, 'D', 'F'), if_then_else(gt(g, g), 'B', if_then_else(False, if_then_else(gt(c, b), if_then_else(and_(True, False), if_then_else(False, 'D', 'B'), if_then_else(True, 'B', 'B')), 'F'), 'A')))))), if_then_else(False, 'B', 'C')), if_then_else(gt(a, g), if_then_else(gt(g, b), 'B', 'D'), if_then_else(False, 'F', 'A')))), 'C')), if_then_else(gt(b, g), if_then_else(gt(min(d, a), g), 'F', if_then_else(gt(c, g), 'D', 'C')), 'B'))
+
+9
+if_then_else(lt(min(d, g), g), if_then_else(gt(g, sub(b, min(d, protectedDiv(g, mul(d, g))))), if_then_else(lt(a, g), 'A', 'B'), if_then_else(lt(g, c), if_then_else(or_(lt(a, g), lt(g, d)), 'B', 'D'), if_then_else(lt(g, d), if_then_else(lt(g, c), if_then_else(lt(c, g), 'A', if_then_else(lt(neg(g), d), if_then_else(lt(d, g), if_then_else(gt(g, b), if_then_else(lt(b, g), 'A', if_then_else(True, 'D', if_then_else(lt(g, g), 'D', if_then_else(lt(d, g), if_then_else(gt(g, b), if_then_else(lt(g, g), 'A', if_then_else(True, if_then_else(True, 'F', 'D'), 'F')), 'A'), 'C')))), 'A'), if_then_else(or_(False, False), if_then_else(False, 'C', 'A'), if_then_else(True, 'A', 'C'))), if_then_else(False, 'A', 'D'))), 'A'), 'C'))), if_then_else(lt(g, d), 'F', if_then_else(gt(g, g), if_then_else(lt(sub(g, g), g), 'A', 'A'), if_then_else(False, 'A', if_then_else(lt(g, d), 'F', if_then_else(False, 'A', 'D'))))))
+
+10
+if_then_else(gt(g, a), if_then_else(True, 'A', if_then_else(False, if_then_else(False, 'B', 'A'), 'B')), if_then_else(not_(gt(b, g)), 'B', if_then_else(not_(gt(a, c)), 'B', if_then_else(gt(min(sub(a, a), protectedDiv(b, c)), c), if_then_else(and_(True, False), if_then_else(False, 'D', 'F'), if_then_else(True, 'D', if_then_else(False, 'D', 'C'))), if_then_else(not_(False), if_then_else(False, 'D', if_then_else(lt(g, d), if_then_else(gt(g, g), 'B', 'F'), if_then_else(gt(g, sub(min(c, a), add(protectedDiv(g, g), protectedDiv(g, b)))), 'C', 'D'))), 'B')))))

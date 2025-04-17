@@ -199,5 +199,3 @@
 198     547     0.08711 198     9.32    0.02    547     0.458062        202.687 198     417     1       547     74.8782
 199     549     0.11342 199     8.21    0.02    549     0.552895        205.077 199     417     22      549     76.5948
 200     551     0.09476 200     8.21    0.02    551     0.516046        205.071 200     445     25      551     76.7844
-
-if_then_else(gt(b, g), if_then_else(True, if_then_else(lt(c, g), if_then_else(False, 'D', 'C'), if_then_else(False, 'A', 'D')), 'A'), if_then_else(lt(g, a), 'B', if_then_else(lt(g, a), if_then_else(gt(add(a, g), protectedDiv(g, g)), 'C', 'C'), 'A')))

@@ -1,5 +1,5 @@
-gen     nevals  avg     gen     max     min     nevals  std     avg     gen     max     min     nevals  std    
-0       1000    4.42966 0       12.09   0.37    1000    3.53503 6.753   0       12      4       1000    3.369571       491     2.55221 1       11.58   0.37    491     2.43778 7.027   1       23      1       491     3.68704
+0       1000    4.42966 0       12.09   0.37    1000    3.53503 6.753   0       12      4       1000    3.36957
+1       491     2.55221 1       11.58   0.37    491     2.43778 7.027   1       23      1       491     3.68704
 2       568     1.99828 2       11.13   0.37    568     2.16802 7.382   2       24      1       568     4.06842
 3       535     1.9194  3       11.4    0.37    535     2.24405 7.846   3       25      1       535     4.4659 
 4       544     1.65315 4       11.58   0.37    544     1.77451 8.663   4       28      1       544     4.65762
@@ -199,6 +199,3 @@ gen     nevals  avg     gen     max     min     nevals  std     avg     gen     
 198     546     0.07075 198     11.13   0       546     0.537322        353.038 198     816     12      546   131.928
 199     531     0.08527 199     10.35   0       531     0.672531        354.092 199     839     32      531   132.627
 200     578     0.10882 200     10.35   0       578     0.788039        357.085 200     839     12      578   135.835
-
-Best Individual:
-if_then_else(gt(b, g), if_then_else(gt(c, g), if_then_else(gt(c, add(g, d)), if_then_else(False, 'F', 'D'), if_then_else(True, 'F', 'C')), 'C'), if_then_else(gt(g, neg(c)), if_then_else(gt(c, c), 'D', if_then_else(gt(d, b), if_then_else(True, if_then_else(gt(d, b), if_then_else(and_(or_(False, gt(g, c)), True), if_then_else(gt(c, b), 'B', if_then_else(gt(a, mul(mul(d, g), mul(b, a))), 'A', if_then_else(gt(c, neg(b)), 'A', if_then_else(gt(c, g), 'D', 'C')))), if_then_else(and_(False, True), if_then_else(gt(g, max(g, g)), if_then_else(False, 'A', 'B'), 'C'), 'D')), if_then_else(gt(c, a), if_then_else(gt(sub(g, c), c), if_then_else(gt(g, a), if_then_else(gt(g, neg(c)), 'F', 'C'), if_then_else(not_(True), 'A', 'B')), if_then_else(True, 'D', 'F')), if_then_else(gt(max(g, a), max(g, c)), 'B', if_then_else(gt(add(g, b), mul(c, g)), if_then_else(True, 'B', 'F'), if_then_else(gt(b, neg(g)), 'A', 'A'))))), if_then_else(gt(g, a), 'C', 'A')), if_then_else(False, 'A', if_then_else(gt(g, a), 'A', if_then_else(gt(max(c, a), max(g, c)), 'B', if_then_else(lt(g, add(g, d)), 'A', if_then_else(gt(g, neg(c)), 'A', 'B'))))))), 'B'))

@@ -1,4 +1,3 @@
-gen     nevals  avg     gen     max     min     nevals  std     avg     gen     max     min     nevals  std    
 0       1000    4.47057 0       11.96   0.83    1000    2.77594 6.67    0       12      4       1000    3.35903
 1       571     2.89935 1       9.92    0.68    571     1.72213 6.807   1       23      1       571     3.64441
 2       545     2.50078 2       10.73   0.68    545     1.72478 7.109   2       23      1       545     3.9374 
@@ -200,6 +199,3 @@ gen     nevals  avg     gen     max     min     nevals  std     avg     gen     
 198     517     0.04874 198     8.84    0       517     0.420414        248.759 198     522     13      517   78.4076
 199     540     0.07114 199     8.84    0       540     0.519762        254.92  199     523     24      540   78.3363
 200     554     0.05354 200     7.04    0       554     0.377363        251.25  200     516     1       554   79.1061
-
-Best Individual:
-if_then_else(gt(b, g), if_then_else(True, if_then_else(or_(gt(max(a, g), g), True), if_then_else(lt(g, c), if_then_else(lt(g, d), if_then_else(or_(True, True), 'F', 'D'), 'D'), if_then_else(True, 'C', 'D')), if_then_else(or_(False, lt(max(a, d), a)), if_then_else(lt(g, c), 'D', if_then_else(False, 'A', if_then_else(or_(True, True), if_then_else(lt(c, d), if_then_else(True, 'F', if_then_else(True, 'D', 'F')), 'D'), 'B'))), 'D')), 'B'), if_then_else(and_(gt(max(protectedDiv(protectedDiv(a, g), neg(c)), max(a, d)), g), lt(g, a)), 'B', 'A'))

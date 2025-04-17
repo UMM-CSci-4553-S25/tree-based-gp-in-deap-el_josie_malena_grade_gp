@@ -1,4 +1,3 @@
-gen     nevals  avg     gen     max     min     nevals  std     avg     gen     max     min     nevals  std    
 0       1000    4.13367 0       11      0.4     1000    3.35867 7.015   0       12      4       1000    3.44482
 1       529     2.30163 1       11.08   0.4     529     2.08633 7.189   1       26      1       529     3.72549
 2       509     1.73982 2       10.2    0.4     509     1.66794 7.93    2       28      1       509     4.0994 
@@ -200,6 +199,3 @@ gen     nevals  avg     gen     max     min     nevals  std     avg     gen     
 198     515     0.05447 198     9.32    0.01    515     0.425514        229.413 198     495     12      515   74.8282
 199     552     0.08775 199     10.2    0.01    552     0.640879        225.461 199     510     11      552   72.6115
 200     523     0.0681  200     6.73    0.01    523     0.407125        223.693 200     473     11      523   71.9791
-
-Best Individual:
-if_then_else(lt(g, b), if_then_else(lt(g, c), 'D', 'C'), if_then_else(gt(a, g), if_then_else(True, 'B', 'B'), if_then_else(False, if_then_else(True, 'A', 'C'), 'A')))
